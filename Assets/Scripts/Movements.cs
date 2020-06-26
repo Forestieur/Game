@@ -58,10 +58,9 @@ public class Movements : MonoBehaviour
 
 
 
-        if (Input.GetKey("w"))
+        if (Input.GetKey("w") || Input.GetKey("up"))
         {
-            rb2d.velocity = new Vector2(rb2d.velocity.x, speedY);
-           
+            rb2d.velocity = new Vector2(rb2d.velocity.x, speedY);        
 
         }
 
