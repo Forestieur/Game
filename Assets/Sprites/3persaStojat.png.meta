@@ -231,8 +231,8 @@ TextureImporter:
       name: 3persaStojat_1
       rect:
         serializedVersion: 2
-        x: 921
-        y: 82
+        x: 918
+        y: 78
         width: 308
         height: 903
       alignment: 0
@@ -252,8 +252,8 @@ TextureImporter:
       name: 3persaStojat_2
       rect:
         serializedVersion: 2
-        x: 1370
-        y: 85
+        x: 1372
+        y: 83
         width: 308
         height: 903
       alignment: 0
