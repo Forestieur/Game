@@ -58,6 +58,30 @@ public class Enemy_agro_script : MonoBehaviour
        
        
     }
+    
+    //bool CanSeePlayer(float distance)
+    //{
+    //    bool val = false;
+
+    //    var castDist = distance;
+        
+    //    Vector2 endPos = 
+
+    //    RaycastHit2D hit = Physics2D.Linecast(transform.position, 
+
+    //}
+    
+
+
+
+
+
+
+
+
+
+
+
 
     public void StopChasingPlayer()
     {
