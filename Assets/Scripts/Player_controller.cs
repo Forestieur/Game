@@ -6,12 +6,18 @@ using UnityEngine;
 
 public class Player_controller : MonoBehaviour
 {
-    // Да посмотри ты уже видос про isGrounded, делается за 20 секунд https://www.youtube.com/watch?v=44djqUTg2Sg      30:38
-    // Если не сделаешь до того как я проснусь, то сам сделаю :Evilsmailik:
+    
     AudioSource audioSrc;
     Rigidbody2D rb2d;
     SpriteRenderer spriteRenderer;
     Animator animator;
+
+
+
+    [SerializeField]
+    Transform groundcheck;
+
+    bool IsGrounded;
 
     [SerializeField]
     private float speedX = 10f;
@@ -19,7 +25,7 @@ public class Player_controller : MonoBehaviour
     [SerializeField]
     private float speedY = 10f;
     
-    //Все что ниже - для выстрелов, не трогай плез <3 
+    
     public bool IsFacingleft;
 
     private bool isShooting;
@@ -49,6 +55,16 @@ public class Player_controller : MonoBehaviour
         
     public void FixedUpdate()
     {
+        if (Physics2D.Linecast(transform.position, groundcheck.position, 1 << LayerMask.NameToLayer("ground")))
+        {
+            IsGrounded = true;
+        }
+        else
+        {
+            IsGrounded = false;
+        }
+
+
 
         if (Input.GetKey("d") || Input.GetKey("right"))
         {
@@ -79,7 +95,7 @@ public class Player_controller : MonoBehaviour
 
 
 
-        if (Input.GetKey("w") || Input.GetKey("up"))
+        if (Input.GetKey("w") && IsGrounded == true || Input.GetKey("up") && IsGrounded==true )
         {
             rb2d.velocity = new Vector2(rb2d.velocity.x, speedY);        
 
