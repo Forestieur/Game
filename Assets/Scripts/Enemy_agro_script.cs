@@ -17,6 +17,9 @@ public class Enemy_agro_script : MonoBehaviour
 
     Rigidbody2D rb2d;
 
+    [SerializeField]
+    Transform groundcheck;
+    bool IsGrounded;
 
     void Start()
     {
@@ -27,8 +30,19 @@ public class Enemy_agro_script : MonoBehaviour
     void Update()
     {
         float distToPlayer = Vector2.Distance(transform.position, player.position);
-        print("distance: " + distToPlayer);
+            //print("distance: " + distToPlayer);
 
+
+        if (Physics2D.Linecast(transform.position, groundcheck.position, 1 << LayerMask.NameToLayer("ground")))
+        {
+            IsGrounded = true;
+        }
+
+        else
+        {
+            IsGrounded = false;
+        }
+        print(IsGrounded);
         if (distToPlayer < agroRange)
         {
             ChasePlayer();
@@ -40,11 +54,13 @@ public class Enemy_agro_script : MonoBehaviour
             StopChasingPlayer();
         }
 
+       
+       
     }
 
     public void StopChasingPlayer()
     {
-        rb2d.velocity = new Vector2(0, 0);
+        rb2d.velocity = new Vector2(0, -10f);
         
     }
 
@@ -52,11 +68,24 @@ public class Enemy_agro_script : MonoBehaviour
     {
         if(transform.position.x < player.position.x)
         {
-            rb2d.velocity = new Vector2(moveSpeed, 0);
+            if (IsGrounded == true)
+            {
+                rb2d.velocity = new Vector2(moveSpeed*1.5f, -10f);
+            }
+            else
+            {
+                rb2d.velocity = new Vector2(moveSpeed, 0);
+            }
             
         }
         else if (transform.position.x > player.position.x)
         {
+            rb2d.velocity = new Vector2(-moveSpeed, 0);
+            if (IsGrounded == true)
+            
+                rb2d.velocity = new Vector2(-moveSpeed*1.5f, -10f);
+            
+            else
             rb2d.velocity = new Vector2(-moveSpeed, 0);
             
         }
