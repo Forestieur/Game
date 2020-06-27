@@ -13,6 +13,9 @@ public class Enemy_agro_script : MonoBehaviour
     Transform cast_point;
 
     [SerializeField]
+    Transform cast_point_down;
+
+    [SerializeField]
     float agroRange;
 
     [SerializeField]
@@ -56,6 +59,7 @@ public class Enemy_agro_script : MonoBehaviour
         {
             IsGrounded = false;
         }
+
         if (distToPlayer < agroRange)
         {
             ChasePlayer();
@@ -67,11 +71,9 @@ public class Enemy_agro_script : MonoBehaviour
             StopChasingPlayer();
         }
 
-
-        if(CanSeePlayer(agroRange))
+        if (CanSeePlayer(agroRange))
         {
             ChasePlayer();
-
         }
         else
         {
@@ -99,12 +101,14 @@ public class Enemy_agro_script : MonoBehaviour
      }
      
         Vector2 endPos = cast_point.position + Vector3.right * castDist;
+        Vector2 endPos_down = cast_point_down.position + Vector3.right * castDist;
 
-        RaycastHit2D hit = Physics2D.Linecast(cast_point.position, endPos, 1 << LayerMask.NameToLayer("action")); 
+        RaycastHit2D hit = Physics2D.Linecast(cast_point.position, endPos, 1 << LayerMask.NameToLayer("action"));
+        RaycastHit2D hit_down = Physics2D.Linecast(cast_point_down.position, endPos_down, 1 << LayerMask.NameToLayer("action"));
 
-        if (hit.collider != null)
+        if (hit.collider != null || hit_down.collider != null)
         {
-            if(hit.collider.gameObject.CompareTag("Player"))
+            if(hit.collider.gameObject.CompareTag("Player") || hit_down.collider.gameObject.CompareTag("Player"))
             {
                 val = true;
 
@@ -113,11 +117,14 @@ public class Enemy_agro_script : MonoBehaviour
             {
                 val = false;
             }
+
             Debug.DrawLine(cast_point.position, endPos, Color.yellow);
+            Debug.DrawLine(cast_point_down.position, endPos_down, Color.yellow);
         }
         else
         {
             Debug.DrawLine(cast_point.position, endPos, Color.white);
+            Debug.DrawLine(cast_point_down.position, endPos_down, Color.white);
         }
         
         
