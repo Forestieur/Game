@@ -91,7 +91,7 @@ public class Player_controller : MonoBehaviour
 
     public void Update()
     {
-        if (Input.GetKey(KeyCode.Mouse0) || Input.GetKey(KeyCode.LeftControl))
+        if (Input.GetKey(KeyCode.J) || Input.GetKey(KeyCode.LeftControl))
         {
             if (isShooting) return;
 
