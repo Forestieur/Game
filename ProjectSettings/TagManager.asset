@@ -6,6 +6,7 @@ TagManager:
   tags:
   - ground
   - fireball
+  - Enemy
   layers:
   - Default
   - TransparentFX
