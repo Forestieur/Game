@@ -19,6 +19,7 @@ public class Enemy_agro_script : MonoBehaviour
 
     [SerializeField]
     Transform groundcheck;
+
     bool IsGrounded;
 
     void Start()
