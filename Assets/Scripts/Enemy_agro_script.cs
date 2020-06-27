@@ -6,6 +6,9 @@ using UnityEngine;
 
 public class Enemy_agro_script : MonoBehaviour
 {
+
+    Animator animator;
+
     [SerializeField]
     Transform player;
 
@@ -36,6 +39,7 @@ public class Enemy_agro_script : MonoBehaviour
     void Start()
     {
         rb2d = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
     }
     
     void Awake()
@@ -69,7 +73,7 @@ public class Enemy_agro_script : MonoBehaviour
         {
 
             StopChasingPlayer();
-        }
+        }   
 
         if (CanSeePlayer(agroRange))
         {
@@ -147,7 +151,7 @@ public class Enemy_agro_script : MonoBehaviour
     public void StopChasingPlayer()
     {
         rb2d.velocity = new Vector2(0, -10f);
-        
+        animator.SetBool("IsWalking", false);
     }
 
     public void ChasePlayer()
@@ -157,23 +161,33 @@ public class Enemy_agro_script : MonoBehaviour
             if (IsGrounded == true)
             {
                 rb2d.velocity = new Vector2(moveSpeed*1.5f, -10f);
+                animator.SetBool("IsWalking", true);
             }
             else
             {
                 rb2d.velocity = new Vector2(moveSpeed, 0);
+           
             }
+
             spriteRenderer.flipX = false;
             IsFacingLeft = false;
         }
         else if (transform.position.x > player.position.x)
         {
             rb2d.velocity = new Vector2(-moveSpeed, 0);
+
             if (IsGrounded == true)
-            
-                rb2d.velocity = new Vector2(-moveSpeed*1.5f, -10f);
-            
+            {
+                rb2d.velocity = new Vector2(-moveSpeed * 1.5f, -10f);
+                animator.SetBool("IsWalking", true);
+            }
+
             else
-            rb2d.velocity = new Vector2(-moveSpeed, 0);
+            {
+                rb2d.velocity = new Vector2(-moveSpeed, 0); 
+             
+            }
+
             spriteRenderer.flipX = true;
             IsFacingLeft = true;
         }
