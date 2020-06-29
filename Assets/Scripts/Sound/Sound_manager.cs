@@ -1,40 +1,36 @@
-﻿//using System.Collections;
-//using System.Collections.Generic;
-//using UnityEngine;
+﻿using UnityEngine.Audio;
+using System;
+using UnityEngine;
 
-//public class Sound_manager : MonoBehaviour
-//{
+public class Sound_manager : MonoBehaviour
+{
+    public Sound[] sounds;
+ 
+
+    [SerializeField]
+    public AudioClip enemyHitSound_1;
+
+
+    void Awake()
+    {
+        foreach (Sound s in sounds)
+        {
+            s.source = gameObject.AddComponent<AudioSource>();
+            s.source.clip = s.clip;
+
+            s.source.volume = s.volume;
+            s.source.pitch = s.pitch;
+        }
     
-//    static AudioSource audioSrc;
 
-//    [SerializeField]
-//    public AudioClip enemyHitSound_1;
+    }
 
-//    public static AudioClip enemyHitSound_2, enemyHitSound_3, enemyDethSound;
+  
 
 
-//    void Start()
-//    {
-        
-//        enemyHitSound_2 = Resources.Load<AudioClip>("hentai_sound_2");
-//        enemyHitSound_3 = Resources.Load<AudioClip>("hentai_sound_3");
-//        enemyDethSound = Resources.Load<AudioClip>("papich_solo");
-
-//        audioSrc = GetComponent<AudioSource>();
-
-//    }
-
-   
-//    void Update()
-//    {
-        
-//    }
-//    public  void PlaySound (string clip)
-//    {
-//        if (clip == "hit_enemy")
-//        {
-//            audioSrc.PlayOneShot(enemyHitSound_1);
-//        }
-//    }
-
-//}
+    public void Play (string name)
+    {
+       Sound s = Array.Find(sounds, sound => sound.name == name);
+        s.source.Play();
+    }
+}
