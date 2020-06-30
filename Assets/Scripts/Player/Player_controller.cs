@@ -14,21 +14,31 @@ public class Player_controller : MonoBehaviour
 
 
 
-    [SerializeField]
-    Transform groundcheck;
 
     bool IsGrounded;
+    public Transform feetpos;
+    public float checkRadius;
+    public LayerMask whatisground;
+    private float jumpTimeCounter;
+    public float jumpTime;
+    private bool isJumping;
+
+
+
 
     [SerializeField]
     private float speedX = 10f;
 
-    [SerializeField]
-    private float speedY = 10f;
+    
     
     
     public bool IsFacingleft;
 
     private bool isShooting;
+
+    private float moveInput;
+
+    public float jumpForce;
 
 
     [SerializeField]
@@ -41,13 +51,13 @@ public class Player_controller : MonoBehaviour
     GameObject fireball;
 
     
-    void Start()
+    void Start()    
     {
         audioSrc = GetComponent<AudioSource>();
         animator = GetComponent<Animator>();
         rb2d = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-
+        rb2d.velocity = new Vector2(moveInput * speedX, rb2d.velocity.y);
 
     }
 
@@ -55,14 +65,7 @@ public class Player_controller : MonoBehaviour
         
     public void FixedUpdate()
     {
-        if (Physics2D.Linecast(transform.position, groundcheck.position, 1 << LayerMask.NameToLayer("ground")))
-        {
-            IsGrounded = true;
-        }
-        else
-        {
-            IsGrounded = false;
-        }
+        
 
 
 
@@ -85,28 +88,61 @@ public class Player_controller : MonoBehaviour
             spriteRenderer.flipX = false;
             
         }
+        
         else
         {
             
+            
             rb2d.velocity = new Vector2(0, rb2d.velocity.y);
             animator.Play("idle_anim");
-        }
-
-
-
-
-        if (Input.GetKey("w") && IsGrounded == true || Input.GetKey("up") && IsGrounded==true )
-        {
-            rb2d.velocity = new Vector2(rb2d.velocity.x, speedY);        
 
         }
+        
+
+
 
 
 
     }
 
-    public void Update()
+    void Update()
     {
+        IsGrounded = Physics2D.OverlapCircle(feetpos.position, checkRadius, whatisground);
+
+
+        if (IsGrounded == true && Input.GetKeyDown(KeyCode.W))
+        {
+            isJumping = true;
+            jumpTimeCounter = jumpTime;
+            rb2d.velocity = Vector2.up * jumpForce;
+            
+        }
+
+
+        if (Input.GetKey(KeyCode.W) && isJumping== true)
+        {
+            if (jumpTimeCounter > 0)
+            {
+                rb2d.velocity = Vector2.up * jumpForce;
+                jumpTimeCounter -= Time.deltaTime;
+            }
+            else
+            {
+                isJumping = false;
+            }
+        }
+        if (Input.GetKeyUp(KeyCode.W))
+        {
+            isJumping = false;
+        }
+
+        
+
+
+
+
+
+
         if (Input.GetKey(KeyCode.J) || Input.GetKey(KeyCode.LeftControl))
         {
             if (isShooting) return;
@@ -122,6 +158,7 @@ public class Player_controller : MonoBehaviour
             Invoke("ResetShoot", shootingDelay);
 
         }
+        
 
     }
     void ResetShoot()
