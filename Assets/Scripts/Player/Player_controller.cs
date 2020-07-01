@@ -56,8 +56,8 @@ public class Player_controller : MonoBehaviour
 
     [SerializeField]
     GameObject fireball;
+    string LastButton = "A";
 
-    
     void Start()    
     {
         audioSrc = GetComponent<AudioSource>();
@@ -65,48 +65,47 @@ public class Player_controller : MonoBehaviour
         rb2d = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         rb2d.velocity = new Vector2(moveInput * speedX, rb2d.velocity.y);
-
+        
     }
 
 
         
     public void FixedUpdate()
     {
-        
 
 
 
-        if (Input.GetKey("d") || Input.GetKey("right"))
-        {
-            IsFacingleft = false;
-
-           
-
-            moveInput = 1;
-
-            rb2d.velocity = new Vector2(moveInput * speedX, rb2d.velocity.y);
-        }
 
         
-        else
-        {
-            
-            
-            rb2d.velocity = new Vector2(0, rb2d.velocity.y);
-           // animator.Play("idle_anim");
-
-        }
-        if (Input.GetKey("a") || Input.GetKey("left"))
+        if (LastButton == "A" && Input.GetKey(KeyCode.A))
         {
             IsFacingleft = true;
 
 
 
-            moveInput = -1;
+             moveInput = -1;
+
+             rb2d.velocity = new Vector2(moveInput * speedX, rb2d.velocity.y);
+        }
+        else if (LastButton == "D" && Input.GetKey(KeyCode.D))
+        {
+            IsFacingleft = false;
+
+
+
+            moveInput = 1;
 
             rb2d.velocity = new Vector2(moveInput * speedX, rb2d.velocity.y);
         }
+        else
+        {
 
+
+            rb2d.velocity = new Vector2(0, rb2d.velocity.y);
+            animator.Play("idle_anim");
+
+        }
+       
 
 
 
@@ -115,6 +114,16 @@ public class Player_controller : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            LastButton = "A";
+        }
+
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            LastButton = "D";
+        }
+
         if (moveInput > 0)
         {
             transform.eulerAngles = new Vector3(0, 180, 0);
@@ -195,7 +204,7 @@ public class Player_controller : MonoBehaviour
         }
         if (wallJumping == true)
         {
-            rb2d.velocity = new Vector2(xWallForce * -moveInput, yWallForce);
+            rb2d.velocity = new Vector2(xWallForce * -moveInput, yWallForce );
         }
 
     }
