@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.AccessControl;
 using UnityEngine;
 using UnityEngine.UI;
+using static Health_gen;
 
 public class Enemy_health : MonoBehaviour
 {
-    [SerializeField]
-    private int health = 5;
+    
+    private int health = Health_gen.enemy_health;
+
+    
 
     private Color defcolor = Color.white;
 
@@ -20,14 +24,16 @@ public class Enemy_health : MonoBehaviour
 
     public float fill;
 
-
+   
 
 
     void Start()
     {
-       
+           
         sr = GetComponent<SpriteRenderer>();
         sr.color = defcolor;
+       
+        float j = (1 / health);
         fill = 1f;
     }
     void Update()
@@ -65,7 +71,8 @@ public class Enemy_health : MonoBehaviour
                         break;
                 }
                 sr.color = hitcolor;
-                fill -= 0.2f;
+
+                fill -= 0.1f;
                 Invoke("Otkat", .1f);
             }
         }

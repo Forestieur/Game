@@ -44,7 +44,10 @@ public class Player_health : MonoBehaviour
     {
         if ((Physics2D.Linecast(transform.position, Hit_box_left.position, 1 << LayerMask.NameToLayer("enemy"))) ||
            (Physics2D.Linecast(transform.position, Hit_box_left_down.position, 1 << LayerMask.NameToLayer("enemy"))) ||
-           (Physics2D.Linecast(transform.position, Hit_box_left_up.position, 1 << LayerMask.NameToLayer("enemy"))))
+           (Physics2D.Linecast(transform.position, Hit_box_left_up.position, 1 << LayerMask.NameToLayer("enemy"))) ||
+           (Physics2D.Linecast(transform.position, Hit_box_right.position, 1 << LayerMask.NameToLayer("enemy"))) ||
+           (Physics2D.Linecast(transform.position, Hit_box_right_down.position, 1 << LayerMask.NameToLayer("enemy"))) ||
+           (Physics2D.Linecast(transform.position, Hit_box_right_up.position, 1 << LayerMask.NameToLayer("enemy"))))
         {
             health--;
             if (health <= 0)
@@ -59,25 +62,7 @@ public class Player_health : MonoBehaviour
 
 
         }
-        else if ((Physics2D.Linecast(transform.position, Hit_box_right.position, 1 << LayerMask.NameToLayer("enemy"))) ||
-           (Physics2D.Linecast(transform.position, Hit_box_right_down.position, 1 << LayerMask.NameToLayer("enemy"))) ||
-           (Physics2D.Linecast(transform.position, Hit_box_right_up.position, 1 << LayerMask.NameToLayer("enemy"))))
-             {
-                health--;
-
-                if (health <= 0)
-                {
-                    Die();
-                }
-                else
-                {
-                    Hittingcolor();
-                    rb2d.AddForce(new Vector2(-40000, 500));
-                }
-
-
-
-             }
+        
         
            
 

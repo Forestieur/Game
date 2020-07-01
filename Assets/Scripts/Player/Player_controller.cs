@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -23,13 +24,19 @@ public class Player_controller : MonoBehaviour
     public float jumpTime;
     private bool isJumping;
 
-
-
+    bool isTouchingFront;
+    public Transform frontCheck;
+    bool wallSliding;
+    public float wallSlidingSpeed;
+    public LayerMask whatiswall;
 
     [SerializeField]
     private float speedX = 10f;
 
-    
+    bool wallJumping;
+    public float xWallForce;
+    public float yWallForce;
+    public float wallJumpTime;
     
     
     public bool IsFacingleft;
@@ -73,31 +80,32 @@ public class Player_controller : MonoBehaviour
         {
             IsFacingleft = false;
 
-            rb2d.velocity = new Vector2(speedX, rb2d.velocity.y);
+           
 
-            spriteRenderer.flipX = true;
+            moveInput = 1;
+
+            rb2d.velocity = new Vector2(moveInput * speedX, rb2d.velocity.y);
         }
 
-
-        else if (Input.GetKey("a") || Input.GetKey("left"))
-        {
-            IsFacingleft = true;
-
-            rb2d.velocity = new Vector2(-speedX, rb2d.velocity.y);
-
-            spriteRenderer.flipX = false;
-            
-        }
         
         else
         {
             
             
             rb2d.velocity = new Vector2(0, rb2d.velocity.y);
-            animator.Play("idle_anim");
+           // animator.Play("idle_anim");
 
         }
-        
+        if (Input.GetKey("a") || Input.GetKey("left"))
+        {
+            IsFacingleft = true;
+
+
+
+            moveInput = -1;
+
+            rb2d.velocity = new Vector2(moveInput * speedX, rb2d.velocity.y);
+        }
 
 
 
@@ -107,6 +115,18 @@ public class Player_controller : MonoBehaviour
 
     void Update()
     {
+        if (moveInput > 0)
+        {
+            transform.eulerAngles = new Vector3(0, 180, 0);
+        }
+        else if (moveInput <0)
+        {
+            transform.eulerAngles = new Vector3(0, 0, 0);
+        }
+
+
+
+
         IsGrounded = Physics2D.OverlapCircle(feetpos.position, checkRadius, whatisground);
 
 
@@ -136,13 +156,6 @@ public class Player_controller : MonoBehaviour
             isJumping = false;
         }
 
-        
-
-
-
-
-
-
         if (Input.GetKey(KeyCode.J) || Input.GetKey(KeyCode.LeftControl))
         {
             if (isShooting) return;
@@ -158,14 +171,48 @@ public class Player_controller : MonoBehaviour
             Invoke("ResetShoot", shootingDelay);
 
         }
-        
+
+        isTouchingFront = Physics2D.OverlapCircle(frontCheck.position, checkRadius, whatiswall);
+
+        if (isTouchingFront == true && IsGrounded == false && moveInput != 0) 
+        {
+            wallSliding = true;
+        }
+        else
+        {
+            wallSliding = false;
+        }
+
+        if(wallSliding)
+        {
+            rb2d.velocity = new Vector2(rb2d.velocity.x, Mathf.Clamp(rb2d.velocity.y, -wallSlidingSpeed, float.MaxValue));
+        }
+
+        if (Input.GetKeyDown(KeyCode.W) && wallSliding == true)
+        {
+            wallJumping = true;
+            Invoke("SetWallJumpingToFalse", wallJumpTime);
+        }
+        if (wallJumping == true)
+        {
+            rb2d.velocity = new Vector2(xWallForce * -moveInput, yWallForce);
+        }
 
     }
+
+
+    void  SetWallJumpingToFalse()
+    {
+        wallJumping = false;
+        
+    }
+
     void ResetShoot()
     {
         isShooting = false;
         //animation.Play("Idle")
 
     }
+    
 
 }
