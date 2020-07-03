@@ -124,15 +124,8 @@ public class Player_controller : MonoBehaviour
             LastButton = "D";
         }
 
-        if (moveInput > 0)
-        {
-            transform.eulerAngles = new Vector3(0, 180, 0);
-        }
-        else if (moveInput <0)
-        {
-            transform.eulerAngles = new Vector3(0, 0, 0);
-        }
-
+       
+        transform.eulerAngles = (moveInput > 0)   ?   new Vector3(0, 180, 0) : new Vector3(0, 0, 0);
 
 
 
@@ -183,7 +176,7 @@ public class Player_controller : MonoBehaviour
 
         isTouchingFront = Physics2D.OverlapCircle(frontCheck.position, checkRadius, whatiswall);
 
-        if (isTouchingFront == true && IsGrounded == false && moveInput != 0) 
+        if (isTouchingFront == true && IsGrounded == false && moveInput != 0)
         {
             wallSliding = true;
         }
@@ -192,7 +185,9 @@ public class Player_controller : MonoBehaviour
             wallSliding = false;
         }
 
-        if(wallSliding)
+      //  wallSliding = (isTouchingFront == true && IsGrounded == false && moveInput != 0);
+
+        if (wallSliding)
         {
             rb2d.velocity = new Vector2(rb2d.velocity.x, Mathf.Clamp(rb2d.velocity.y, -wallSlidingSpeed, float.MaxValue));
         }

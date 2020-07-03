@@ -70,15 +70,10 @@ public class Player_health : MonoBehaviour
         
 
     }
-        private void Otkat()
-        {        
-            sr.color = defcolor;
-        }
+        private void Otkat() => sr.color = defcolor;
+        
+        private void Die() => Destroy(gameObject);
 
-        private void Die()
-        {
-            Destroy(gameObject);
-        }
         private void Hittingcolor()
         {
         sr.color = hitcolor;

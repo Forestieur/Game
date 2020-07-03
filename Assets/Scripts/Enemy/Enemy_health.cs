@@ -36,11 +36,9 @@ public class Enemy_health : MonoBehaviour
         float j = (1 / health);
         fill = 1f;
     }
-    void Update()
-    {
 
-        bar.fillAmount = fill;
-    }
+    void Update() => bar.fillAmount = fill;
+
 
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -79,19 +77,15 @@ public class Enemy_health : MonoBehaviour
 
     }
 
-    private void Otkat()
-    {
-        sr.color = defcolor;
-    }
+    private void Otkat() => sr.color = defcolor;
 
-
-    private void Die()
-    {
-        Destroy(gameObject);
+    private void Die() => Destroy(gameObject);
+    /* {
+         Destroy(gameObject);
 
 
 
-    }
+     }*/
 
 }
   

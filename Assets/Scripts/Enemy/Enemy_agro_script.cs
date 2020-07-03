@@ -30,7 +30,7 @@ public class Enemy_agro_script : MonoBehaviour
     Transform groundcheck;
 
     [SerializeField]
-    bool IsFacingLeft;
+    bool IsFacingLeft =false;
 
     bool IsGrounded;
 
@@ -42,49 +42,30 @@ public class Enemy_agro_script : MonoBehaviour
         animator = GetComponent<Animator>();
     }
     
-    void Awake()
-    {
-        spriteRenderer = GetComponent<SpriteRenderer>();
+    void Awake() => spriteRenderer = GetComponent<SpriteRenderer>();
 
-    }
+   
 
     void Update()
     {
         float distToPlayer = Vector2.Distance(transform.position, player.position);
-            //print("distance: " + distToPlayer);
 
 
-        if (Physics2D.Linecast(transform.position, groundcheck.position, 1 << LayerMask.NameToLayer("ground")))
-        {
-            IsGrounded = true;
-        }
-
-        else
-        {
-            IsGrounded = false;
-        }
-
-        if (distToPlayer < agroRange)
-        {
-            ChasePlayer();
-
-        }
-        else
-        {
-
-            StopChasingPlayer();
-        }   
-
-        if (CanSeePlayer(agroRange))
-        {
-            ChasePlayer();
-        }
-        else
-        {
-            StopChasingPlayer();
-        }
-
+        IsGrounded = Physics2D.Linecast(transform.position, groundcheck.position, 1 << LayerMask.NameToLayer("ground"));
+        
        
+        if (CanSeePlayer(agroRange) && distToPlayer < agroRange)
+        {
+          
+            ChasePlayer();
+        }
+        else
+        {
+            
+            StopChasingPlayer();
+        }
+
+          
        
     }
     
@@ -99,20 +80,42 @@ public class Enemy_agro_script : MonoBehaviour
 
       var castDist = distance;
 
-     if(IsFacingLeft == true)
-     {
-            castDist = -distance;
-     }
+    
      
         Vector2 endPos = cast_point.position + Vector3.right * castDist;
+        Vector2 endPos_r = cast_point.position + Vector3.right * -castDist;
+
         Vector2 endPos_down = cast_point_down.position + Vector3.right * castDist;
+        Vector2 endPos_down_r = cast_point_down.position + Vector3.right * -castDist;
 
         RaycastHit2D hit = Physics2D.Linecast(cast_point.position, endPos, 1 << LayerMask.NameToLayer("action"));
-        RaycastHit2D hit_down = Physics2D.Linecast(cast_point_down.position, endPos_down, 1 << LayerMask.NameToLayer("action"));
+        RaycastHit2D hit_r = Physics2D.Linecast(cast_point.position, endPos_r, 1 << LayerMask.NameToLayer("action"));
 
-        if (hit.collider != null || hit_down.collider != null)
+        RaycastHit2D hit_down = Physics2D.Linecast(cast_point_down.position, endPos_down, 1 << LayerMask.NameToLayer("action"));
+        RaycastHit2D hit_down_r = Physics2D.Linecast(cast_point_down.position, endPos_down_r, 1 << LayerMask.NameToLayer("action"));
+
+
+        if ((hit.collider != null || hit_down.collider != null) )
         {
-            if(hit.collider.gameObject.CompareTag("Player") || hit_down.collider.gameObject.CompareTag("Player"))
+            
+            if (hit.collider.gameObject.CompareTag("Player") || hit_down.collider.gameObject.CompareTag("Player"))
+            {              
+                val = true;
+            }
+            else
+            {
+               
+                val = false;
+            }
+           
+
+            Debug.DrawLine(cast_point.position, endPos, Color.yellow);
+            Debug.DrawLine(cast_point_down.position, endPos_down, Color.yellow);
+            
+        }
+        else if (hit_r.collider != null || hit_down_r.collider != null)
+        {
+            if (val == false && (hit_r.collider.gameObject.CompareTag("Player") || hit_down_r.collider.gameObject.CompareTag("Player")))
             {
                 val = true;
 
@@ -121,19 +124,18 @@ public class Enemy_agro_script : MonoBehaviour
             {
                 val = false;
             }
-
-            Debug.DrawLine(cast_point.position, endPos, Color.yellow);
-            Debug.DrawLine(cast_point_down.position, endPos_down, Color.yellow);
+            Debug.DrawLine(cast_point.position, endPos_r, Color.yellow);
+            Debug.DrawLine(cast_point_down.position, endPos_down_r, Color.yellow);
         }
         else
         {
             Debug.DrawLine(cast_point.position, endPos, Color.white);
             Debug.DrawLine(cast_point_down.position, endPos_down, Color.white);
+            Debug.DrawLine(cast_point.position, endPos_r, Color.white);
+            Debug.DrawLine(cast_point_down.position, endPos_down_r, Color.white);
         }
-        
-        
+               
         return val;
-
 
     }
     
@@ -174,7 +176,7 @@ public class Enemy_agro_script : MonoBehaviour
         }
         else if (transform.position.x > player.position.x)
         {
-            rb2d.velocity = new Vector2(-moveSpeed, 0);
+           // rb2d.velocity = new Vector2(-moveSpeed, 0);
 
             if (IsGrounded == true)
             {
