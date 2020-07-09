@@ -47,6 +47,7 @@ public class Player_controller : MonoBehaviour
 
     public float jumpForce;
 
+    bool LastPosition = true;
 
     [SerializeField]
     public float shootingDelay = .5f;
@@ -73,13 +74,16 @@ public class Player_controller : MonoBehaviour
     public void FixedUpdate()
     {
 
+       
 
 
-
-        
         if (LastButton == "A" && Input.GetKey(KeyCode.A))
         {
+
+            animator.Play("Player_run");
+
             IsFacingleft = true;
+            
 
 
 
@@ -89,6 +93,9 @@ public class Player_controller : MonoBehaviour
         }
         else if (LastButton == "D" && Input.GetKey(KeyCode.D))
         {
+            animator.Play("Player_run");
+
+
             IsFacingleft = false;
 
 
@@ -102,10 +109,22 @@ public class Player_controller : MonoBehaviour
 
 
             rb2d.velocity = new Vector2(0, rb2d.velocity.y);
-            animator.Play("idle_anim");
+            animator.Play("Player_idle");
 
         }
-       
+
+        if (moveInput > 0 && LastPosition)
+        {
+            transform.eulerAngles = new Vector3(0, 0, 0);
+            LastPosition = false;
+        }
+
+        if (moveInput < 0 && LastPosition)
+        {
+            transform.eulerAngles = new Vector3(0, 180, 0);
+            LastPosition = false;
+
+        }
 
 
 
@@ -114,18 +133,27 @@ public class Player_controller : MonoBehaviour
 
     void Update()
     {
+
+
+      
+
+
+        
+
         if (Input.GetKeyDown(KeyCode.A))
         {
             LastButton = "A";
+            LastPosition = true;
         }
 
         if (Input.GetKeyDown(KeyCode.D))
         {
             LastButton = "D";
+            LastPosition = true;
         }
 
-       
-        transform.eulerAngles = (moveInput > 0)   ?   new Vector3(0, 180, 0) : new Vector3(0, 0, 0);
+
+
 
 
 
@@ -165,7 +193,7 @@ public class Player_controller : MonoBehaviour
             //animation.Play("shooting")
             isShooting = true;
 
-            audioSrc.Play();
+            
 
             GameObject fir = Instantiate(fireball);
             fir.GetComponent<Fireball_script>().StartShoot(IsFacingleft);
