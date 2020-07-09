@@ -39,7 +39,7 @@ public class Player_controller : MonoBehaviour
     public float wallJumpTime;
     
     
-    public bool IsFacingleft;
+    public static bool IsFacingleft;
 
     private bool isShooting;
 

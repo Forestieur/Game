@@ -17,7 +17,7 @@ public class Player_health : MonoBehaviour
     private Color hitcolor = Color.red;
 
     [SerializeField]
-    private int health;
+    private int health = 1000000;
 
     [SerializeField]
     private Transform Hit_box_left;
@@ -40,14 +40,16 @@ public class Player_health : MonoBehaviour
     }
 
 
-    void FixedUpdate()
+    void Update()
     {
-        if ((Physics2D.Linecast(transform.position, Hit_box_left.position, 1 << LayerMask.NameToLayer("enemy"))) ||
-           (Physics2D.Linecast(transform.position, Hit_box_left_down.position, 1 << LayerMask.NameToLayer("enemy"))) ||
-           (Physics2D.Linecast(transform.position, Hit_box_left_up.position, 1 << LayerMask.NameToLayer("enemy"))) ||
-           (Physics2D.Linecast(transform.position, Hit_box_right.position, 1 << LayerMask.NameToLayer("enemy"))) ||
-           (Physics2D.Linecast(transform.position, Hit_box_right_down.position, 1 << LayerMask.NameToLayer("enemy"))) ||
-           (Physics2D.Linecast(transform.position, Hit_box_right_up.position, 1 << LayerMask.NameToLayer("enemy"))))
+        if (((Physics2D.Linecast(transform.position, Hit_box_left.position, 1 << LayerMask.NameToLayer("enemy")) ||
+           Physics2D.Linecast(transform.position, Hit_box_left_down.position, 1 << LayerMask.NameToLayer("enemy")) ||
+           Physics2D.Linecast(transform.position, Hit_box_left_up.position, 1 << LayerMask.NameToLayer("enemy"))) && Player_controller.IsFacingleft)
+           ||
+           ((Physics2D.Linecast(transform.position, Hit_box_right.position, 1 << LayerMask.NameToLayer("enemy")) ||
+           Physics2D.Linecast(transform.position, Hit_box_right_down.position, 1 << LayerMask.NameToLayer("enemy")) ||
+           Physics2D.Linecast(transform.position, Hit_box_right_up.position, 1 << LayerMask.NameToLayer("enemy"))) && !Player_controller.IsFacingleft)
+          )
         {
             health--;
             if (health <= 0)
@@ -60,7 +62,28 @@ public class Player_health : MonoBehaviour
                 rb2d.AddForce(new Vector2(40000, 500));
             }
 
+        }
 
+
+
+        if ( ((Physics2D.Linecast(transform.position, Hit_box_right.position, 1 << LayerMask.NameToLayer("enemy")) ||
+           Physics2D.Linecast(transform.position, Hit_box_right_down.position, 1 << LayerMask.NameToLayer("enemy")) ||
+           Physics2D.Linecast(transform.position, Hit_box_right_up.position, 1 << LayerMask.NameToLayer("enemy"))) && Player_controller.IsFacingleft) 
+           ||
+           ( (Physics2D.Linecast(transform.position, Hit_box_left.position, 1 << LayerMask.NameToLayer("enemy"))) ||
+           (Physics2D.Linecast(transform.position, Hit_box_left_down.position, 1 << LayerMask.NameToLayer("enemy"))) ||
+           (Physics2D.Linecast(transform.position, Hit_box_left_up.position, 1 << LayerMask.NameToLayer("enemy")))) && !Player_controller.IsFacingleft)
+        {
+            health--;
+            if (health <= 0)
+            {
+                Die();
+            }
+            else
+            {
+                Hittingcolor();
+                rb2d.AddForce(new Vector2(-40000, 500));
+            }
         }
         
         
